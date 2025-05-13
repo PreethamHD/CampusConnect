@@ -1,3 +1,4 @@
+import 'package:campusconnect/core/utils/utils.dart';
 import 'package:campusconnect/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:campusconnect/components/my_button.dart';
@@ -17,27 +18,28 @@ final rePasswordControllerProvider = StateProvider(
 class SignUppg extends ConsumerWidget {
   void Function()? onTap;
 
-  void signup(WidgetRef ref) {
+  void signup(BuildContext context, WidgetRef ref) {
     final emailController = ref.read(emailControllerProvider);
     final passWController = ref.read(passwordControllerProvider);
     final rePassWController = ref.read(rePasswordControllerProvider);
     var bool =
         passWController.text.trim() == rePassWController.text.trim() &&
-        emailController.text.contains("@bmsce.ac.in");
+        emailController.text.contains("@bmsce.ac.in") &&
+        passWController.text.length >= 6;
     if (bool) {
       ref
           .read(authControllerProvider)
-          .createAccountwithEmail(emailController.text, passWController.text);
+          .createAccountwithEmail(
+            context,
+            emailController.text,
+            passWController.text,
+          );
     } else if (!emailController.text.contains("@bmsce.ac.in")) {
-      print("wrong email");
-      print(passWController.text);
-      print(rePassWController.text);
-      print(emailController.text);
+      showSnackBar(context, "Only college email-id is allowed");
+    } else if (passWController.text.trim() != rePassWController.text.trim()) {
+      showSnackBar(context, "Password and Confrim password doesnt match");
     } else {
-      print("password not matcing");
-      print(passWController.text);
-      print(rePassWController.text);
-      print(emailController.text);
+      showSnackBar(context, "Password should Contain min 6 charecters");
     }
   }
 
@@ -97,7 +99,7 @@ class SignUppg extends ConsumerWidget {
               controller: rePassWController,
             ),
             const SizedBox(height: 20),
-            MyButton(text: 'Login', onTap: () => signup(ref)),
+            MyButton(text: 'SignUp', onTap: () => signup(context, ref)),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

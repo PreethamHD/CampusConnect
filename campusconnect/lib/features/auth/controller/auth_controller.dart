@@ -35,7 +35,15 @@ class AuthController {
     );
   }
 
-  void createAccountwithEmail(String email, String password) {
-    _authRepository.createAccountWithEmail(email, password);
+  void createAccountwithEmail(
+    BuildContext context,
+    String email,
+    String password,
+  ) async {
+    final user = await _authRepository.createAccountWithEmail(email, password);
+    user.fold(
+      (l) => showSnackBar(context, l.message),
+      (r) => _ref.read(userProvider.notifier).update((state) => r),
+    );
   }
 }

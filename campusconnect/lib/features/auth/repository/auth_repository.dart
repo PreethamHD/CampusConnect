@@ -39,7 +39,7 @@ class AuthRepository {
         email: email,
         password: password,
       );
-      late UserModel userModel;
+      UserModel userModel;
       /*  userModel = UserModel(
         uid: userCredential.user!.uid,
         Name: email.split('.cs')[0],
@@ -58,7 +58,10 @@ class AuthRepository {
     }
   }
 
-  void createAccountWithEmail(String email, String password) async {
+  FutureEither<UserModel> createAccountWithEmail(
+    String email,
+    String password,
+  ) async {
     try {
       UserCredential userCredential = await _auth
           .createUserWithEmailAndPassword(email: email, password: password);
@@ -71,12 +74,12 @@ class AuthRepository {
         role: RoleConstant.user,
       );
       await _users.doc(userCredential.user!.uid).set(userModel.toMap());
+
+      return right(userModel);
     } on FirebaseAuthException catch (e) {
       throw e.message!;
     } catch (e) {
-      // Handle other potential errors
-      print('An unexpected error occurred: $e');
-      // Display a generic error message
+      return left(Failure(e.toString()));
     }
   }
 
