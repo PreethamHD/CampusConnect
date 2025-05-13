@@ -29,6 +29,7 @@ class MyTextField extends StatelessWidget {
           hintText: hintText,
         ),
         obscureText: obsText,
+        controller: controller,
       ),
     );
   }

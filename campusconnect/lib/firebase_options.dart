@@ -71,4 +71,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'campusconnect-3e670.firebasestorage.app',
     iosBundleId: 'com.example.campusconnect',
   );
+
 }

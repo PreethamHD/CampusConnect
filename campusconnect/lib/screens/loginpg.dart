@@ -1,18 +1,37 @@
 import 'package:campusconnect/components/my_button.dart';
 import 'package:campusconnect/components/text_field.dart';
+import 'package:campusconnect/features/auth/controller/auth_controller.dart';
 import 'package:campusconnect/theme/pallete.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Loginpg extends StatelessWidget {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passWController = TextEditingController();
+final emailControllerProvider = StateProvider((ref) => TextEditingController());
+final passwordControllerProvider = StateProvider(
+  (ref) => TextEditingController(),
+);
+
+// ignore: must_be_immutable
+class Loginpg extends ConsumerWidget {
   void Function()? onTap;
 
-  void login() {}
+  void login(BuildContext context, WidgetRef ref) {
+    final emailController = ref.read(emailControllerProvider);
+    final passWController = ref.read(passwordControllerProvider);
+    ref
+        .read(authControllerProvider)
+        .signInWithEmailAndPassword(
+          context,
+          emailController.text.trim(),
+          passWController.text.trim(),
+        );
+  }
+
   Loginpg({super.key, required this.onTap});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final emailController = ref.watch(emailControllerProvider);
+    final passWController = ref.watch(passwordControllerProvider);
     return Scaffold(
       body: Center(
         child: Column(
@@ -47,16 +66,16 @@ class Loginpg extends StatelessWidget {
             MyTextField(
               hintText: "Email",
               obsText: false,
-              controller: _emailController,
+              controller: emailController,
             ),
             const SizedBox(height: 2),
             MyTextField(
               hintText: "Password",
               obsText: true,
-              controller: _passWController,
+              controller: passWController,
             ),
             const SizedBox(height: 20),
-            MyButton(text: 'Login', onTap: login),
+            MyButton(text: 'Login', onTap: () => login(context, ref)),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,

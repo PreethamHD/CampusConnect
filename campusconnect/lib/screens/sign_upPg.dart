@@ -1,20 +1,53 @@
+import 'package:campusconnect/features/auth/controller/auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:campusconnect/components/my_button.dart';
 import 'package:campusconnect/components/text_field.dart';
 import 'package:campusconnect/theme/pallete.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SignUppg extends StatelessWidget {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passWController = TextEditingController();
-  final TextEditingController _rePassWController = TextEditingController();
+final emailControllerProvider = StateProvider((ref) => TextEditingController());
+final passwordControllerProvider = StateProvider(
+  (ref) => TextEditingController(),
+);
+final rePasswordControllerProvider = StateProvider(
+  (ref) => TextEditingController(),
+);
 
+// ignore: must_be_immutable
+class SignUppg extends ConsumerWidget {
   void Function()? onTap;
 
-  void login() {}
+  void signup(WidgetRef ref) {
+    final emailController = ref.read(emailControllerProvider);
+    final passWController = ref.read(passwordControllerProvider);
+    final rePassWController = ref.read(rePasswordControllerProvider);
+    var bool =
+        passWController.text.trim() == rePassWController.text.trim() &&
+        emailController.text.contains("@bmsce.ac.in");
+    if (bool) {
+      ref
+          .read(authControllerProvider)
+          .createAccountwithEmail(emailController.text, passWController.text);
+    } else if (!emailController.text.contains("@bmsce.ac.in")) {
+      print("wrong email");
+      print(passWController.text);
+      print(rePassWController.text);
+      print(emailController.text);
+    } else {
+      print("password not matcing");
+      print(passWController.text);
+      print(rePassWController.text);
+      print(emailController.text);
+    }
+  }
+
   SignUppg({super.key, required this.onTap});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final emailController = ref.watch(emailControllerProvider);
+    final passWController = ref.watch(passwordControllerProvider);
+    final rePassWController = ref.watch(rePasswordControllerProvider);
     return Scaffold(
       body: Center(
         child: Column(
@@ -49,22 +82,22 @@ class SignUppg extends StatelessWidget {
             MyTextField(
               hintText: "Enter Email",
               obsText: false,
-              controller: _emailController,
+              controller: emailController,
             ),
             const SizedBox(height: 2),
             MyTextField(
               hintText: "Enter Password",
               obsText: true,
-              controller: _passWController,
+              controller: passWController,
             ),
             const SizedBox(height: 2),
             MyTextField(
               hintText: "Re-Enter Password",
               obsText: true,
-              controller: _rePassWController,
+              controller: rePassWController,
             ),
             const SizedBox(height: 20),
-            MyButton(text: 'Login', onTap: login),
+            MyButton(text: 'Login', onTap: () => signup(ref)),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
