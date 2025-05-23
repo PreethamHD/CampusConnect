@@ -113,16 +113,14 @@ class MyProfilescreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 10),
 
-                //for stream builder jus call the func here
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(12),
-                    color: Colors.grey.shade100,
                   ),
                   child: const Text(
-                    "Liked posts will appear here...",
-                    style: TextStyle(color: Colors.grey),
+                    "Liked posts will appear here..........",
+                    style: TextStyle(color: Colors.blue),
                   ),
                 ),
               ],
