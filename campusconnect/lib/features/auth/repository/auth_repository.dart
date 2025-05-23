@@ -83,6 +83,8 @@ class AuthRepository {
     }
   }
 
+  Stream<User?> get authStateChange => _auth.authStateChanges();
+
   Stream<UserModel> getUser(String uid) {
     return _users
         .doc(uid)
@@ -90,5 +92,9 @@ class AuthRepository {
         .map(
           (event) => UserModel.fromMap(event.data() as Map<String, dynamic>),
         );
+  }
+
+  void logout() async {
+    await _auth.signOut();
   }
 }

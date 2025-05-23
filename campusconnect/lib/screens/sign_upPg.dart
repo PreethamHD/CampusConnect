@@ -28,7 +28,7 @@ class SignUppg extends ConsumerWidget {
         passWController.text.length >= 6;
     if (bool) {
       ref
-          .read(authControllerProvider)
+          .read(authControllerProvider.notifier)
           .createAccountwithEmail(
             context,
             emailController.text,
@@ -64,7 +64,7 @@ class SignUppg extends ConsumerWidget {
             ),
 
             const Text(
-              'Find Your F*ckMate ^_^',
+              'Find Your Campus Mates ^_^',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w300,

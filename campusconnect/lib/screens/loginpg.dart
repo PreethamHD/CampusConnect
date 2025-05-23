@@ -18,7 +18,7 @@ class Loginpg extends ConsumerWidget {
     final emailController = ref.read(emailControllerProvider);
     final passWController = ref.read(passwordControllerProvider);
     ref
-        .read(authControllerProvider)
+        .read(authControllerProvider.notifier)
         .signInWithEmailAndPassword(
           context,
           emailController.text.trim(),
@@ -46,7 +46,7 @@ class Loginpg extends ConsumerWidget {
             ),
 
             const Text(
-              'Find Your F*ckMate ^_^',
+              'Find Your Campus Mates ^_^',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w300,

@@ -54,7 +54,7 @@ class PostModel {
       authorId: map['authorId'] as String,
       content: map['content'] as String,
       imageUrl: map['imageUrl'] != null ? map['imageUrl'] as String : null,
-      likes: List<String>.from((map['likes'] as List<String>)),
+      likes: List<String>.from(map['likes'] ?? []),
       timestamp:
           map['timestamp'] != null && map['timestamp'] is int
               ? DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int)
