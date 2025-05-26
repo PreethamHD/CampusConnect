@@ -42,6 +42,7 @@ dependencies:
   fpdart: ^1.1.1
   routemaster: ^1.0.1
   file_picker: ^10.1.9
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:

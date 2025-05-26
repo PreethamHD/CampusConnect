@@ -11,6 +11,6 @@ class Constants {
     FeedScreen(),
     DiscussionScreen(),
     NotesScreen(),
-    ChatScreen(),
+    ChatListScreen(),
   ];
 }

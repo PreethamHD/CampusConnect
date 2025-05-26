@@ -97,4 +97,19 @@ class AuthRepository {
   void logout() async {
     await _auth.signOut();
   }
+
+  FutureEither<List<UserModel>> getAllUsers() async {
+    try {
+      QuerySnapshot snapshot = await _users.get();
+      return right(
+        snapshot.docs
+            .map((doc) => UserModel.fromMap(doc.data() as Map<String, dynamic>))
+            .toList(),
+      );
+    } on FirebaseAuthException catch (e) {
+      throw e.message!;
+    } catch (e) {
+      return left(Failure(e.toString()));
+    }
+  }
 }

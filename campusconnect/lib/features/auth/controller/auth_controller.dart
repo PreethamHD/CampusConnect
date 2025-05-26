@@ -1,3 +1,4 @@
+import 'package:campusconnect/core/typedef.dart';
 import 'package:campusconnect/core/utils/utils.dart';
 import 'package:campusconnect/features/auth/repository/auth_repository.dart';
 import 'package:campusconnect/models/user_model.dart';
@@ -22,6 +23,15 @@ final authStateChangeProvider = StreamProvider((ref) {
 final getUserDataProvider = StreamProvider.family((ref, String uid) {
   final authController = ref.watch(authControllerProvider.notifier);
   return authController.getUserData(uid);
+});
+
+final usersMapProvider = FutureProvider<Map<String, UserModel>>((ref) async {
+  final authController = ref.read(authControllerProvider.notifier);
+  final result = await authController.getAllUsers();
+
+  return result.fold((l) => {}, (users) {
+    return {for (var user in users) user.uid: user};
+  });
 });
 
 class AuthController extends StateNotifier<bool> {
@@ -49,6 +59,10 @@ class AuthController extends StateNotifier<bool> {
       (l) => showSnackBar(context, l.message),
       (r) => _ref.read(userProvider.notifier).update((state) => r),
     );
+  }
+
+  FutureEither<List<UserModel>> getAllUsers() {
+    return _authRepository.getAllUsers();
   }
 
   void createAccountwithEmail(

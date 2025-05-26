@@ -8,6 +8,7 @@ import 'package:campusconnect/screens/notes_folder_screen.dart';
 import 'package:campusconnect/screens/notes_screen.dart';
 import 'package:campusconnect/screens/profile_screen/edit_profile_screen.dart';
 import 'package:campusconnect/screens/profile_screen/my_profileScreen.dart';
+import 'package:campusconnect/screens/select_user_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:routemaster/routemaster.dart';
 
@@ -21,7 +22,9 @@ final loggedInRoute = RouteMap(
     '/home': (_) => const MaterialPage(child: FeedScreen()),
     '/add-post': (_) => const MaterialPage(child: AddPostScreen()),
     '/discussion': (_) => const MaterialPage(child: DiscussionScreen()),
-    '/chat': (_) => const MaterialPage(child: ChatScreen()),
+    '/chat': (_) => const MaterialPage(child: ChatListScreen()),
+    '/chat/select_user':
+        (_) => MaterialPage(child: const UserSelectionScreen()),
     '/notes': (_) => const MaterialPage(child: NotesScreen()),
     '/profile': (_) => const MaterialPage(child: MyProfilescreen()),
     '/profile/editProfile':

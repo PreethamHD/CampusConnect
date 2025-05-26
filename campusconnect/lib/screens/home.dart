@@ -4,7 +4,6 @@ import 'package:campusconnect/features/auth/controller/auth_controller.dart';
 import 'package:campusconnect/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:routemaster/routemaster.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
