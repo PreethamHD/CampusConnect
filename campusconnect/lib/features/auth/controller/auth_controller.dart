@@ -26,7 +26,7 @@ final getUserDataProvider = StreamProvider.family((ref, String uid) {
 });
 
 final usersMapProvider = FutureProvider<Map<String, UserModel>>((ref) async {
-  final authController = ref.read(authControllerProvider.notifier);
+  final authController = ref.watch(authControllerProvider.notifier);
   final result = await authController.getAllUsers();
 
   return result.fold((l) => {}, (users) {

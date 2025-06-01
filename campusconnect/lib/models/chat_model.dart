@@ -1,6 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Message {
   final String id;
   final String senderId;
@@ -46,19 +48,24 @@ class Message {
       'receiverId': receiverId,
       'text': text,
       'imageUrl': imageUrl,
-      'timestamp': timestamp.millisecondsSinceEpoch,
+      'timestamp': Timestamp.fromDate(timestamp),
       'isRead': isRead,
     };
   }
 
   factory Message.fromMap(Map<String, dynamic> map) {
+    final timestampField = map['timestamp'];
+
     return Message(
       id: map['id'] as String,
       senderId: map['senderId'] as String,
       receiverId: map['receiverId'] as String,
       text: map['text'] as String,
       imageUrl: map['imageUrl'] != null ? map['imageUrl'] as String : null,
-      timestamp: DateTime.fromMillisecondsSinceEpoch(map['timestamp'] as int),
+      timestamp:
+          timestampField is Timestamp
+              ? timestampField.toDate()
+              : DateTime.fromMillisecondsSinceEpoch(timestampField as int),
       isRead: map['isRead'] as bool,
     );
   }

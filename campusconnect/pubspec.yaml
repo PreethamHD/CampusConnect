@@ -43,6 +43,7 @@ dependencies:
   routemaster: ^1.0.1
   file_picker: ^10.1.9
   intl: ^0.20.2
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:

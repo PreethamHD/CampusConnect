@@ -11,6 +11,13 @@ final ChatControllerProvider = StateNotifierProvider<ChatController, bool>((
   return ChatController(chatrepository: chatRepository, ref: ref);
 });
 
+final lastMessagesProvider = StreamProvider.family<List<Message>, String>((
+  ref,
+  userId,
+) {
+  return ref.watch(ChatControllerProvider.notifier).getLastMessages(userId);
+});
+
 final userChatsProvider = StreamProvider.family((ref, String userId) {
   return ref.watch(ChatRepositoryProvider).getUserChats(userId);
 });

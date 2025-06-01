@@ -12,7 +12,6 @@ class DiscussionController extends StateNotifier<bool> {
   final Ref ref;
   DiscussionController(this.ref) : super(false);
 
-  // Stream to get all discussion messages
   Stream<List<DiscussionModel>> get discussions {
     return FirebaseFirestore.instance
         .collection('discussions')
@@ -25,7 +24,6 @@ class DiscussionController extends StateNotifier<bool> {
         });
   }
 
-  // Send text message
   void sendTextMessage({required String senderId, required String text}) async {
     try {
       final message = DiscussionModel(

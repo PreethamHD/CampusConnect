@@ -4,7 +4,6 @@ import 'package:campusconnect/screens/discussion_screen.dart';
 import 'package:campusconnect/screens/feed_screen.dart';
 import 'package:campusconnect/screens/home.dart';
 import 'package:campusconnect/screens/loginSignpg.dart';
-import 'package:campusconnect/screens/notes_folder_screen.dart';
 import 'package:campusconnect/screens/notes_screen.dart';
 import 'package:campusconnect/screens/profile_screen/edit_profile_screen.dart';
 import 'package:campusconnect/screens/profile_screen/my_profileScreen.dart';
@@ -25,15 +24,9 @@ final loggedInRoute = RouteMap(
     '/chat': (_) => const MaterialPage(child: ChatListScreen()),
     '/chat/select_user':
         (_) => MaterialPage(child: const UserSelectionScreen()),
-    '/notes': (_) => const MaterialPage(child: NotesScreen()),
+    '/notes': (_) => const MaterialPage(child: SemesterScreen()),
     '/profile': (_) => const MaterialPage(child: MyProfilescreen()),
     '/profile/editProfile':
         (_) => const MaterialPage(child: EditProfileScreen()),
-    '/notes/:subject':
-        (routeData) => MaterialPage(
-          child: NotesFolderScreen(
-            subject: routeData.pathParameters['subject']!,
-          ),
-        ),
   },
 );

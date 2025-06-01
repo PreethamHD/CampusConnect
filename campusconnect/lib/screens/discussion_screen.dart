@@ -75,78 +75,85 @@ class _DiscussionScreenState extends ConsumerState<DiscussionScreen> {
                               isMe
                                   ? Alignment.centerRight
                                   : Alignment.centerLeft,
-                          child: Container(
-                            margin: const EdgeInsets.symmetric(
-                              horizontal: 8,
-                              vertical: 4,
+                          child: ConstrainedBox(
+                            constraints: BoxConstraints(
+                              maxWidth:
+                                  MediaQuery.of(context).size.width *
+                                  0.75, // 75% of screen width
                             ),
-                            padding: const EdgeInsets.all(12),
-                            decoration: BoxDecoration(
-                              color:
-                                  isMe
-                                      ? Pallete.brownColor
-                                      : Pallete.brownColor.withOpacity(0.85),
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                if (!isMe)
-                                  Row(
-                                    children: [
-                                      CircleAvatar(
-                                        radius: 12,
-                                        backgroundImage:
-                                            photo.isNotEmpty
-                                                ? NetworkImage(photo)
-                                                : null,
-                                        child:
-                                            photo.isEmpty
-                                                ? const Icon(
-                                                  Icons.person,
-                                                  size: 16,
-                                                )
-                                                : null,
-                                      ),
-                                      const SizedBox(width: 6),
-                                      Text(
-                                        name,
+                            child: Container(
+                              margin: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 4,
+                              ),
+                              padding: const EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color:
+                                    isMe
+                                        ? Pallete.brownColor
+                                        : Pallete.brownColor.withOpacity(0.85),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  if (!isMe)
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 12,
+                                          backgroundImage:
+                                              photo.isNotEmpty
+                                                  ? NetworkImage(photo)
+                                                  : null,
+                                          child:
+                                              photo.isEmpty
+                                                  ? const Icon(
+                                                    Icons.person,
+                                                    size: 16,
+                                                  )
+                                                  : null,
+                                        ),
+                                        const SizedBox(width: 6),
+                                        Text(
+                                          name,
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 13,
+                                            color: Colors.white70,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  if (!isMe) const SizedBox(height: 4),
+                                  msg.imageUrl != null
+                                      ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(8),
+                                        child: Image.network(
+                                          msg.imageUrl!,
+                                          height: 160,
+                                          width: 160,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                      : Text(
+                                        msg.text,
                                         style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 13,
-                                          color: Colors.white70,
+                                          color: Colors.white,
                                         ),
                                       ),
-                                    ],
-                                  ),
-                                if (!isMe) const SizedBox(height: 4),
-                                msg.imageUrl != null
-                                    ? ClipRRect(
-                                      borderRadius: BorderRadius.circular(8),
-                                      child: Image.network(
-                                        msg.imageUrl!,
-                                        height: 160,
-                                        width: 160,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    )
-                                    : Text(
-                                      msg.text,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                      ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    TimeOfDay.fromDateTime(
+                                      msg.timestamp,
+                                    ).format(context),
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      color: Colors.white60,
                                     ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  TimeOfDay.fromDateTime(
-                                    msg.timestamp,
-                                  ).format(context),
-                                  style: const TextStyle(
-                                    fontSize: 10,
-                                    color: Colors.white60,
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         );

@@ -10,7 +10,7 @@ class Constants {
   static const tabs = [
     FeedScreen(),
     DiscussionScreen(),
-    NotesScreen(),
+    SemesterScreen(),
     ChatListScreen(),
   ];
 }

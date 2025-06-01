@@ -1,113 +1,95 @@
 import 'package:campusconnect/features/auth/controller/auth_controller.dart';
+import 'package:campusconnect/features/notes/controller/notes_controller.dart';
+import 'package:campusconnect/models/notes_model.dart';
+import 'package:campusconnect/screens/subjectsScreen.dart';
 import 'package:campusconnect/theme/pallete.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:routemaster/routemaster.dart';
 
-class NotesScreen extends ConsumerStatefulWidget {
-  const NotesScreen({super.key});
+class SemesterScreen extends ConsumerWidget {
+  const SemesterScreen({super.key});
 
-  @override
-  ConsumerState<NotesScreen> createState() => _NotesScreenState();
-}
-
-class _NotesScreenState extends ConsumerState<NotesScreen> {
-  final TextEditingController subController = TextEditingController();
-  final List<String> subjects = [
-    'DBMS',
-    'Computer Networks',
-    'Java',
-    'OOPs',
-    'Linear Algebra',
-    'OS',
-  ];
-
-  void addFolder() {
+  void _showAddSemesterDialog(BuildContext context, WidgetRef ref) {
+    final TextEditingController semController = TextEditingController();
     showDialog(
       context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Create New Folder'),
-          content: TextField(
-            autofocus: true,
-            controller: subController,
-            decoration: const InputDecoration(labelText: 'Folder Name'),
+      builder:
+          (ctx) => AlertDialog(
+            title: const Text('Add Semester'),
+            content: TextField(
+              controller: semController,
+              decoration: const InputDecoration(
+                hintText: 'Enter semester name',
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(ctx),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  final sem = SemesterModel(
+                    sem: semController.text.trim(),
+                    subjects: [],
+                  );
+                  ref
+                      .read(notesControllerProvider.notifier)
+                      .createSemester(sem);
+                  Navigator.pop(ctx);
+                },
+                child: const Text('Add'),
+              ),
+            ],
           ),
-
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  subjects.add(subController.text.trim());
-                });
-                Navigator.of(context).pop();
-              },
-              child: const Text('Add'),
-            ),
-          ],
-        );
-      },
     );
   }
 
   @override
-  Widget build(BuildContext context) {
-    final user = ref.watch(userProvider)!;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider);
+    final semAsync = ref.watch(getSemesterProvider);
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Notes'), centerTitle: true),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: GridView.builder(
-          itemCount: subjects.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            mainAxisSpacing: 12,
-            crossAxisSpacing: 12,
-            childAspectRatio: 2.3,
-          ),
-          itemBuilder: (context, index) {
-            final subject = subjects[index];
-            return GestureDetector(
-              onTap: () {
-                Routemaster.of(context).push('/notes/$subject');
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Pallete.brownColor,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.folder, size: 48, color: Colors.blue),
-                    const SizedBox(height: 8),
-                    Text(
-                      subject,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
+      appBar: AppBar(title: const Text('Semesters')),
+      body: semAsync.when(
+        data:
+            (sems) => GridView.builder(
+              padding: const EdgeInsets.all(12),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 1.2,
               ),
-            );
-          },
-        ),
+              itemCount: sems.length,
+              itemBuilder: (context, index) {
+                final sem = sems[index];
+                return GestureDetector(
+                  onTap:
+                      () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => SubjectScreen(semester: sem),
+                        ),
+                      ),
+                  child: Card(
+                    color: Pallete.brownColor,
+                    child: Center(child: Text(sem.sem)),
+                  ),
+                );
+              },
+            ),
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (err, _) => Center(child: Text(err.toString())),
       ),
       floatingActionButton:
-          user.role == 'admin'
+          user?.role == 'admin'
               ? FloatingActionButton(
-                onPressed: addFolder,
-                tooltip: 'Create folder',
+                onPressed: () => _showAddSemesterDialog(context, ref),
                 child: const Icon(Icons.add),
               )
               : null,
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }

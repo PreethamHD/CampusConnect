@@ -2,10 +2,8 @@ import 'package:campusconnect/Providers/firebase_Providers.dart';
 import 'package:campusconnect/core/constants/firebase_constants.dart';
 import 'package:campusconnect/core/failure.dart';
 import 'package:campusconnect/core/typedef.dart';
-import 'package:campusconnect/features/chat/controller/chat_controller.dart';
 import 'package:campusconnect/models/chat_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:fpdart/fpdart.dart';
 
@@ -97,26 +95,26 @@ class ChatRepository {
   Stream<List<Message>> getLastMessagesForUser(String userId) {
     return _chat
         .where('participants', arrayContains: userId)
+        .orderBy('lastUpdated', descending: true)
         .snapshots()
         .asyncMap((chatSnapshot) async {
-          final futures =
-              chatSnapshot.docs.map((chatDoc) async {
-                final messagesSnap =
-                    await _chat
-                        .doc(chatDoc.id)
-                        .collection(FirebaseConstants.messageCollections)
-                        .orderBy('timestamp', descending: true)
-                        .limit(1)
-                        .get();
+          List<Message> result = [];
 
-                if (messagesSnap.docs.isEmpty) return null;
+          for (var chatDoc in chatSnapshot.docs) {
+            final messageSnap =
+                await chatDoc.reference
+                    .collection(FirebaseConstants.messageCollections)
+                    .orderBy('timestamp', descending: true)
+                    .limit(1)
+                    .get();
 
-                final messageData = messagesSnap.docs.first.data();
-                return Message.fromMap(messageData);
-              }).toList();
+            if (messageSnap.docs.isNotEmpty) {
+              final messageData = messageSnap.docs.first.data();
+              result.add(Message.fromMap(messageData));
+            }
+          }
 
-          final messages = await Future.wait(futures);
-          return messages.whereType<Message>().toList();
+          return result;
         });
   }
 

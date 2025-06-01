@@ -1,5 +1,4 @@
 import 'package:campusconnect/features/auth/controller/auth_controller.dart';
-import 'package:campusconnect/models/user_model.dart';
 import 'package:campusconnect/screens/message_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -42,7 +41,17 @@ class UserSelectionScreen extends ConsumerWidget {
                 itemBuilder: (context, index) {
                   final user = userList[index];
                   return ListTile(
-                    leading: const CircleAvatar(child: Icon(Icons.person)),
+                    leading: CircleAvatar(
+                      backgroundImage:
+                          user.ProfilePic != null
+                              ? NetworkImage(user.ProfilePic)
+                              : null,
+                      child:
+                          user.ProfilePic == null
+                              ? const Icon(Icons.person)
+                              : null,
+                    ),
+
                     title: Text(user.Name),
                     onTap: () {
                       if (currentUser == null) return;
@@ -55,7 +64,7 @@ class UserSelectionScreen extends ConsumerWidget {
                           builder:
                               (_) => MessageScreen(
                                 chatId: chatId,
-                                receiverId: user.uid, // corrected here
+                                receiverId: user.uid,
                               ),
                         ),
                       );
